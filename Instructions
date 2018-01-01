@@ -1,0 +1,21 @@
+------ Ideal Workflow ------
+Describe Image
+
+---- Current Environment ------
+Every component is a Docker container
+
+1. Devmachine -- which is a centos7 image with git and RBTools. 
+2. Jenkins -- Official Jenkins image with docker installed. 
+3. Reviewboard (Reviewboard + memcache + mysql) 
+4. sample node application.
+
+----- Demo --------
+
+prerequisites.
+
+1. docker installed os with version 17.12.0-ce
+2. docker-compose with verion 1.18.0
+3. about 4 GB RAM
+4. 10 GB disk
+
+Note: This machine should be publicly available just to make it work with Github webhook. 

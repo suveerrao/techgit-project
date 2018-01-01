@@ -1,0 +1,46 @@
+version: "3"
+volumes:
+  mysql-utf8.cnf:
+  db_data:
+  jenkins:
+  
+services:
+  memcache:
+    image: memcached:1.4.28
+
+  db:
+    image: mysql:5.7.13
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: supersecretpassword
+        MYSQL_DATABASE: reviewboard
+    volumes:
+        - mysql-utf8.cnf:/etc/mysql/conf.d/mysql-utf8.cnf:ro
+        - db_data:/var/lib/mysql
+    depends_on:
+        - "memcache"
+
+  reviewboard:
+    image: suveer/reviewboard
+    environment:
+        DATABASE: mysql
+        REVIEWBOARD_DB_PASSWORD: supersecretpassword
+    links:
+        - db:dbserver
+        - memcache
+    ports:
+        - "8081:80"
+    depends_on:
+        - "memcache"
+        - "db"
+    
+  jenkins:
+    image: suveer/myjenkins
+    ports:
+        - "8080:8080"
+        - "50000:50000"
+    volumes:
+        - jenkins:/var/jenkins_home
+        - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+        - "reviewboard"
